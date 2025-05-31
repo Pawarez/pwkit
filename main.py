@@ -1,6 +1,6 @@
 import hashlib
 import requests
-import getpass
+import argparse
 
 # Encode Your Password With utf-8 and sha1
 def get_sha_1_hash(password):
@@ -36,5 +36,17 @@ def check_pwned_data(password):
   return f"Your Password Has Never Been Leaked"
 
 if __name__ == "__main__":
-    pwd = getpass.getpass("Enter your password to check: ")
+    parser = argparse.ArgumentParser(description="Check if your password has been leaked using the HIBP API.")
+    
+    parser.add_argument("--password","-p",help= "The password you want to check.")
+    
+
+    args = parser.parse_args() 
+
+    if args.password:
+      pwd = args.password
+    
+    else:
+      pwd = input("Enter your password to check: ")
+
     print(check_pwned_data(pwd))
