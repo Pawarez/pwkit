@@ -21,3 +21,22 @@ python main.py
 ```bash
 Enter your password to check: password123
 ```
+
+ * Or check a single password via argument.
+
+```bash
+python main.py --password password123
+```
+* To check multiple passwords from a file.
+
+```bash
+python main.py --file passwords.txt
+```
+
+## Help
+
+To see all available options and usage info run
+
+```bash
+python main.py --help
+```
