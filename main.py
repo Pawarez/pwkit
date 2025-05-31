@@ -1,6 +1,7 @@
 import hashlib
 import requests
 import argparse
+import os
 
 # Encode Your Password With utf-8 and sha1
 def get_sha_1_hash(password):
@@ -28,25 +29,34 @@ def check_pwned_data(password):
     if api_suffix == suffix:  
       counts = int(counts)
       if counts == 1 :
-        return f"Your Password Has Been Leaked {counts} time"
+        return f"Your Password ({password}) Has Been Leaked {counts} time"
         
       else :
-        return f"Your Password Has Been Leaked {counts} times"
+        return f"Your Password ({password}) Has Been Leaked {counts} times"
   
-  return f"Your Password Has Never Been Leaked"
+  return f"Your Password ({password}) Has Never Been Leaked"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Check if your password has been leaked using the HIBP API.")
     
-    parser.add_argument("--password","-p",help= "The password you want to check.")
-    
+    parser.add_argument("--password","-p",help= "The password you want to check")
+    parser.add_argument("--file","-f",help= "Path to a file containing passwords")
 
     args = parser.parse_args() 
-
-    if args.password:
-      pwd = args.password
+    
+    if args.file:
+      if not os.path.isfile(args.file):
+        print(f"File not found. {args.file}")
+      else:
+        with open(args.file,"r", encoding='utf8') as file:
+          for line in file:
+            line = line.strip()
+            print(check_pwned_data(line))
     
     else:
-      pwd = input("Enter your password to check: ")
+      if args.password:
+        pwd = args.password
+      else:
+        pwd = input("Enter your password to check: ")
 
-    print(check_pwned_data(pwd))
+      print(check_pwned_data(pwd))
