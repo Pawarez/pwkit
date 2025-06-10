@@ -9,7 +9,10 @@ def get_sha_1_hash(password):
 
 def get_pwned_data(prefix):
   url = f"https://api.pwnedpasswords.com/range/{prefix}"
-  response = requests.get(url)
+  try:
+    response = requests.get(url,timeout= 5)
+  except requests.exceptions.RequestException:
+      raise RuntimeError("Network error: Unable to connect to the HIBP API. Please check your internet connection or try again later.")  
   
   if response.status_code != 200:
     raise RuntimeError(f"Error fetching data: {response.status_code}")
@@ -41,9 +44,12 @@ if __name__ == "__main__":
     
     parser.add_argument("--password","-p",help= "The password you want to check")
     parser.add_argument("--file","-f",help= "Path to a file containing passwords")
+    parser.add_argument("--output", "-o",nargs='?',const="result.txt",help="Output file to save results (default: result.txt if --output is given without value)")
 
     args = parser.parse_args() 
     
+    result = []
+  
     if args.file:
       if not os.path.isfile(args.file):
         print(f"File not found. {args.file}")
@@ -51,12 +57,41 @@ if __name__ == "__main__":
         with open(args.file,"r", encoding='utf8') as file:
           for line in file:
             line = line.strip()
-            print(check_pwned_data(line))
+            res = check_pwned_data(line)
+            result.append(res)
+            print(res)
     
     else:
       if args.password:
         pwd = args.password
+        res = check_pwned_data(pwd)
+        result.append(res)
+        print(res)
       else:
         pwd = input("Enter your password to check: ")
+        res = check_pwned_data(pwd)
+        result.append(res)
+        print(res)
+    
 
-      print(check_pwned_data(pwd))
+    if args.output:
+      try:
+        with open(args.output, "w", encoding='utf8') as output_file:
+          output_file.write("\n".join(result))
+        print(f"Results saved to {args.output}")
+      except IOError as e:
+        print(f"Error writing to file {args.output}: {e}")
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
