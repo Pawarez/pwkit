@@ -1,42 +1,62 @@
-# pwkit
+# Password Leak Checker
 
-This project is a CLI tool to check if your password has been exposed in the Have I Been Pwned database.
+A command-line tool to check if your passwords have been exposed in data breaches using the Have I Been Pwned API.
 
-## How to use
+## Features
 
-1. Install dependencies.
+- Check single passwords
+- Process multiple passwords from a file
+- Save results to output file
+- Secure password handling with k-anonymity
 
+## Usage
+
+### Basic Password Check
 ```bash
-pip install requests
+python main.py -p mypassword
 ```
 
-2. Run the program.
-
+### Check Password and Save Result
 ```bash
-python main.py
+# Save to default result.txt
+python main.py -p mypassword --output
+
+# Save to custom file
+python main.py -p mypassword -o custom.txt
 ```
 
-3. Enter the password you want to check.
-
+### Check Multiple Passwords from File
 ```bash
-Enter your password to check: password123
+# Check passwords and display results
+python main.py -f passwords.txt
+
+# Check and save results
+python main.py -f passwords.txt --output results.txt
 ```
 
- * Or check a single password via argument.
+## Output Options
 
-```bash
-python main.py --password password123
+The `--output` / `-o` argument supports two formats:
+
+1. With filename:
+   ```bash
+   python main.py -p mypassword -o custom.txt
+   ```
+
+2. Without filename (uses default "result.txt"):
+   ```bash
+   python main.py -p mypassword --output
+   ```
+
+## Output Format
+
+The output file contains one result per line:
 ```
-* To check multiple passwords from a file.
-
-```bash
-python main.py --file passwords.txt
+Your Password (****) Has Been Leaked 5 times
+Your Password (****) Has Never Been Leaked
 ```
 
-## Help
+## Requirements
 
-To see all available options and usage info run
-
-```bash
-python main.py --help
-```
+- Python 3.6+
+- requests
