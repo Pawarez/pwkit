@@ -1,4 +1,4 @@
-# Password Leak Checker
+# pwkit
 
 A command-line tool to check if your passwords have been exposed in data breaches using the Have I Been Pwned API.
 
