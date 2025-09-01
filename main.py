@@ -2,6 +2,7 @@ import hashlib
 import requests
 import argparse
 import os
+import getpass
 
 # Encode Your Password With utf-8 and sha1
 def get_sha_1_hash(password):
@@ -25,7 +26,6 @@ def check_pwned_data(password):
   prefix , suffix = sha1[:5] , sha1[5:]
   
   response_suffix = get_pwned_data(prefix)
-  
   for line in response_suffix.splitlines():
     api_suffix , counts = line.split(":")
 
@@ -68,7 +68,7 @@ if __name__ == "__main__":
         result.append(res)
         print(res)
       else:
-        pwd = input("Enter your password to check: ")
+        pwd = getpass.getpass("Enter your password to check: ")
         res = check_pwned_data(pwd)
         result.append(res)
         print(res)
